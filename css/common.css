@@ -75,6 +75,102 @@ td,th {
 	background: #3bcd91;
 }
 
+/*aui重写 按钮*/
+/*按钮半圆*/
+.aui-btn.aui-btn-semi{
+	border-radius: 25px !important;
+}
+.aui-btn {
+  position: relative;
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  font-family: inherit;
+  text-decoration: none;
+  text-align: center;
+  margin: 0;
+  background: #dddddd;
+  padding: 0 0.6rem;
+  height: 2rem;
+  line-height: 2rem;
+  border-radius: 0.2rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/*.aui-btn-block {
+	display: block;
+	width: 100%;
+	height: 2rem;
+	line-height: 2rem;
+	margin-bottom: 0;
+	font-size: 0.8rem;
+}*/
+.aui-btn-middle {
+	width: 45%;
+	height: 2rem;
+	line-height: 2rem;
+	margin-bottom: 0;
+	font-size: 0.8rem;
+}
+
+.aui-btn-primary {
+    color: #ffffff;
+    background-color: #2eb0fb;
+}
+.aui-btn-blue {
+    color: #ffffff;
+    background-color: #4F79E8;
+}
+.aui-btn-green {
+    color: #ffffff;
+    background-color: #69BB20;
+}
+/* 按钮点击 */
+.aui-btn-primary:active {
+    color: #ffffff;
+    background-color: #079ef5;
+}
+.aui-btn-blue:active {
+    color: #ffffff;
+    background-color: #0b4af1;
+}
+.aui-btn-green:active {
+    color: #ffffff;
+    background-color: #499009;
+}
+
+.aui-btn-primary.aui-btn-outlined {
+    color: #079ef5 !important;
+    border: 1px solid #079ef5 !important;
+}
+.aui-btn-blue.aui-btn-outlined {
+    color: #0b4af1 !important;
+    border: 1px solid #0b4af1 !important;
+}
+.aui-btn-green.aui-btn-outlined {
+    color: #499009 !important;
+    border: 1px solid #499009 !important;
+}
+
+/*aui重写 搜索框*/
+.aui-searchbar-circle{
+		background-color: #fff;
+		border-radius: 25px !important;
+}
+.aui-searchbar-circle .aui-searchbar-input{
+		background-color: #F3F3F3;
+		margin: 0;
+		height:40px;
+		line-height:40px;
+}
+.aui-searchbar-circle input{
+	 	height:40px;
+}
 
 /*重写aui样式*/
 .aui-bar-nav {
