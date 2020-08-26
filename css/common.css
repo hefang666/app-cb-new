@@ -1,0 +1,226 @@
+
+html,body {
+	background-color: #fff;
+}
+nav,article,aside,details,main,header,footer,section,fieldset,figcaption,figure{
+	display: block;
+}
+img,a,button,em,del,strong,var,label,cite,small,time,mark,code,textarea{
+	display:inline-block;
+}
+header,section,footer {
+	position:relative;
+}
+input,button,textarea {
+	border:0;
+	margin:0;
+	padding:0;
+	font-size:1em;
+	line-height:1em;
+	/*-webkit-appearance:none;*/
+	background-color:rgba(0, 0, 0, 0);
+}
+span{
+	display:inline-block;
+}
+a:active, a:hover {
+  outline: 0;
+}
+a, a:visited{
+	text-decoration:none;
+}
+
+label, .wordWrap{
+    word-wrap: break-word;
+    word-break: break-all;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,th {
+  padding: 0;
+}
+.clearfix:after{
+	content: ' ';
+	display: block;
+	clear: both;
+	visibility:hidden;
+	line-height: 0;
+	height:0;
+}
+.loading_more{
+	display: block;
+	height: 1.5em;
+	width: 100%;
+}
+.loading_more:before {
+	display: inline-block; vertical-align: text-bottom;
+	content: ' '; height: 16px; width: 16px; margin-right: 6px;
+	background: url(../image/loading_more.gif) no-repeat center;
+	-webkit-background-size: contain;
+	background-size: contain;
+}
+.loading_more:after {
+	content: '加载更多';
+}
+
+.aui-bg-blue {
+	background: #2eb0fb;
+}
+.aui-bg-yellow {
+	background: #fbc902;
+}
+.aui-bg-green {
+	background: #3bcd91;
+}
+
+
+/*重写aui样式*/
+.aui-bar-nav {
+  	/*background-color: linear-gradient(yellow, blue);*/
+  	/*background-color: blue;*/
+}
+
+.snt-bar-fiexd {
+    position: fixed;
+    top: 0;
+}
+footer.aui-bar-tab {
+	top: auto;
+	bottom: 0;
+}
+.snt-bar-fiexd ~ .snt-container {
+  	padding-top: 2.25rem;
+}
+
+footer.aui-bar-tab ~ .snt-container {
+	padding-bottom: 2.4rem
+}
+
+.aui-bar-light {
+  	color: #000;
+}
+
+.aui-bar-nav.aui-bar-light .aui-iconfont {
+	  color: #000;
+}
+
+.aui-bar-tab .aui-active {
+	color: #4F79E8
+}
+
+.message-list .aui-list-item {
+	padding: .8rem 0;
+	padding-left: .75rem;
+	background-position-x: 3.3rem;
+}
+.message-list .aui-list-item-media {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0
+}
+.message-list .message-icon {
+	border-radius: 0.25rem;
+	width: 3.1rem;
+	height: 3.1rem;
+	text-align: center;
+	margin-right: .75rem
+}
+.message-list .aui-list-item-media img {
+	width:1.67rem;
+	height: 1.43rem;
+}
+
+/*设置服务器*/
+.aui-radio:checked, .aui-radio.aui-checked,
+.aui-checkbox:checked, .aui-checkbox.aui-checked {
+	background: #4F79E8;
+	border-color: #4F79E8;
+}
+.service-list label {
+	white-space: nowrap;
+}
+.service-list .aui-list-item {
+	padding: 0 .75rem;
+}
+.service-list .aui-list-item-input {
+	width: auto;
+	padding-right: 0;
+}
+.service-list .list-icon {
+	white-space: nowrap;
+}
+.service-list .list-icon .aui-btn {
+	background: #fff;
+	border-radius: 3px;
+	border: solid 1px #666666;
+	color: #333;
+}
+.service-list .list-icon .aui-btn:hover, .service-list .list-icon .aui-btn.button-active {
+	background-color: #4F79E8 !important;
+    color: #fff;
+    border-color: #4F79E8;
+}
+.button-active {
+	background: #4F79E8!important;
+	color: #fff!important;
+	border-color: #4F79E8!important;
+}
+.service-list .aui-radio, .service-list .aui-checkbox {
+	vertical-align: -7px;
+}
+.check-true, .check-false {
+	width: 0.7rem;
+    height: 0.7rem;
+    background: url(../image/mine_frame/checkTrue.jpg);
+    background-size: 0.7rem 0.7rem;
+    margin: 0.8rem 0.3rem 0 0.3rem;
+	display: inline-block;
+}
+.check-false {
+	background: url(../image/mine_frame/checkFalse.jpg);
+	background-size: 0.7rem 0.7rem;
+}
+
+/*表单列表*/
+.snt-form-list .aui-list-item-label {
+	width: 4rem;
+	text-align: justify;
+	text-align-last: justify;
+}
+
+.snt-form-list .aui-list-item-label .snt-form-label {
+	width: 2.5rem;
+	text-align: justify;
+	text-align-last: justify;
+}
+.snt-label.aui-label {
+    border-radius: 0.08rem;
+    border: solid 0.03rem #e5e5e5;
+    font-size: var(--fontsize65);
+    font-weight: normal;
+    font-stretch: normal;
+    letter-spacing: 0rem;
+    color: #333333;
+    border-radius: 0 !important;
+    padding: 0.33rem 0.4rem !important;
+    margin: 0.1rem 0.3rem 0.1rem 0 !important;
+    background-color: #f0f0f0 !important;
+    color: #333 !important;
+}
+.snt-label .aui-list-item-right {
+    display: inline-block;
+    vertical-align: middle;
+}
+.snt-label .close {
+    width: 0.75rem;
+    height: 0.75rem;
+    background: url(../image/message_frame/close2.png);
+    background-size: 100% 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-transition: 200ms;
+    transition: 200ms;
+}
