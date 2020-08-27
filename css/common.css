@@ -161,6 +161,7 @@ td,th {
 .aui-searchbar-circle{
 		background-color: #fff;
 		border-radius: 25px !important;
+		line-height:40px;
 }
 .aui-searchbar-circle .aui-searchbar-input{
 		background-color: #F3F3F3;
