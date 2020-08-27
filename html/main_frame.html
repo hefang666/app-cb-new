@@ -270,38 +270,97 @@
                           <i class="aui-iconfont aui-icon-close"></i>
                       </div>
                   </div>
-                  <div class="aui-searchbar-btn" tapmode>取消</div>
               </div>
               <br>
             </section>
-            
+            <!-- 顶部tabs页 -->
+            <section class="aui-margin-r-15 aui-margin-l-15 aui-margin-b-15">
+                <div class="aui-tab" id="tab">
+                    <div class="aui-tab-item tapmode aui-active">抄表本</div>
+                    <div class="aui-tab-item tapmode">口径</div>
+                </div>
+
+                <!-- 带图标的顶部tabs -->
+                <div class="aui-tab" id="tab2">
+                    <div class="aui-tab-item tapmode aui-active">消息提示 <i class="aui-iconfont aui-icon-down"></i></div>
+                    <div class="aui-tab-item tapmode">工作查询 <i class="aui-iconfont aui-icon-down"></i></div>
+                </div>
+            </section>
+            <!-- 弹窗 -->
+            <section class="aui-margin-r-15 aui-margin-l-15">
+                <div class="aui-btn aui-btn-warning aui-btn-block" onclick="alertMode()">弹窗</div>
+            </section>
         </div>
 
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/city/jquery.min.js"></script>
+<script type="text/javascript" src="../script/aui/aui-tab.js" ></script>
+<script type="text/javascript" src="../script/aui/aui-dialog.js" ></script>
+
 <script type="text/javascript">
-// apiready = function(){
-//       api.parseTapmode();
-//   }
-//   var searchBar = document.querySelector(".aui-searchbar");
-//   var searchBarInput = document.querySelector(".aui-searchbar input");
-//   var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
-//   var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
-//   if(searchBar){
-//       searchBarInput.oninput = function(){
-//           if(this.value.length){
-//               searchBarClearBtn.style.display = 'block';
-//           }else{
-//               searchBarClearBtn.style.display = 'none';
-//           }
-//       }
-//   }
-//   searchBarClearBtn.onclick = function(){
-//       this.style.display = 'none';
-//       searchBarInput.value = '';
-//       searchBarBtn.classList.remove("aui-text-info");
-//       searchBarBtn.textContent = "取消";
-//   }
+    apiready = function(){
+        api.parseTapmode();
+        tabInit();
+    }
+
+    // tab
+    function tabInit(){
+        var tab = new auiTab({
+            element: document.getElementById("tab"),
+        }, function(ret) {
+            if (ret.index == 1) {
+                alert(ret.index);
+            } else {
+                alert(ret.index);
+            }
+        });
+
+        // 带图标tab
+        var tab2 = new auiTab({
+            element:document.getElementById("tab2"),
+        },function(ret){
+            // console.log(ret)
+        });
+    }
+
+    // 弹窗
+    function alertMode(){
+        var dialog = new auiDialog();
+        dialog.alert({
+            title:"弹出提示",
+            buttons:['取消','确定']
+        },function(ret){
+            if(ret){
+                dialog.alert({
+                    title:"提示",
+                    msg:"您点击了第"+ret.buttonIndex+"个按钮",
+                    buttons:['确定']
+                });
+            }
+        })
+    }
+
+    // 搜索框
+    function searchBarInit(){
+        var searchBar = document.querySelector(".aui-searchbar");
+        var searchBarInput = document.querySelector(".aui-searchbar input");
+        var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+        var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+        if(searchBar){
+            searchBarInput.oninput = function(){
+                if(this.value.length){
+                    searchBarClearBtn.style.display = 'block';
+                }else{
+                    searchBarClearBtn.style.display = 'none';
+                }
+            }
+        }
+        searchBarClearBtn.onclick = function(){
+            this.style.display = 'none';
+            searchBarInput.value = '';
+        }
+    }
 </script>
 </html>
