@@ -84,6 +84,10 @@ td,th {
 .snt-green{
 	color:#69BB20;
 }
+.snt-gray{
+	color:#aaa;
+}
+
 /*aui重写 按钮*/
 /*按钮半圆*/
 .aui-btn.aui-btn-semi{
@@ -138,6 +142,10 @@ td,th {
 .aui-btn-green {
     color: #ffffff;
     background-color: #69BB20;
+}
+.aui-btn-white{
+		color:#2eb0fb;
+		background-color: #ffffff;
 }
 /* 按钮点击 */
 .aui-btn-primary:active {

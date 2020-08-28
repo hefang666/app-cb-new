@@ -8,18 +8,39 @@
     <title>登录</title>
     <link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/login.css" />
 </head>
 
 <body>
-    <div id="wrap">
-        登录
+    <div class="snt-container">
+        <div class="snt-login-box">
+            <div class="snt-login-form">
+                <div class="snt-input aui-margin-b-15">
+                    <input id="username" type="text" placeholder="用户名"><i class="aui-iconfont aui-icon-down"></i>
+                </div>
+                <div class="snt-input aui-margin-b-15">
+                    <input id="password" type="password" placeholder="密码"><i class="aui-iconfont aui-icon-hide"></i>
+                </div>
+                <div class="aui-margin-b-15"><div class="aui-btn aui-btn-white aui-btn-semi" onclick="Login()">立即登录</div></div>
+                <div class="snt-login-ohters">
+                    <div class=""><input type="checkbox" class="aui-checkbox snt-login-checkbox" value="">自动登录</div>
+                    <div class="">设置服务器</div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/city/jquery.min.js"></script>
 <script type="text/javascript">
-
+    // 立即登录
+    function Login(){
+        var userName = $api.byId('username').value;
+        var password = $api.byId('password').value;
+        var serviceAddress = $api.getStorage('apiUrl');
+        console.log(serviceAddress);
+    }
 </script>
 
 </html>
