@@ -74,7 +74,16 @@ td,th {
 .aui-bg-green {
 	background: #3bcd91;
 }
-
+/*颜色重写*/
+.snt-primary{
+	color:#2eb0fb;
+}
+.snt-blue{
+	color:#4F79E8;
+}
+.snt-green{
+	color:#69BB20;
+}
 /*aui重写 按钮*/
 /*按钮半圆*/
 .aui-btn.aui-btn-semi{
@@ -190,6 +199,71 @@ td,th {
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.snt-icon-middle{
+		font-size: 26px;
+}
+
+/* 按钮组 */
+.snt-btns-box{
+		position: absolute;
+		/*bottom: 5%;*/
+		width: 10.48rem;
+		left: 3rem;
+}
+.snt-btns{
+		width: 12.35rem;
+		height: 2.5rem;
+		border:1px solid #aaa;
+		border-radius: 25px;
+		padding: 0 1rem;
+}
+.snt-clear{
+		clear: both;
+}
+.snt-btns li{
+		float: left;
+		text-align: center;
+}
+.snt-btns li:nth-child(1){
+	margin: 0.1rem 0.9rem;
+}
+.snt-btns li:nth-child(2){
+	margin: 0.1rem 0.9rem;
+}
+.snt-btns li:nth-child(3){
+	margin: 0.1rem 0;
+}
+
+.snt-btns-box-four{
+		position: absolute;
+		/*bottom: 5%;*/
+		width: 16.48rem;
+		left: 2rem;
+}
+.snt-btns-box-four .snt-btns{
+		width: 16.48rem;
+		height: 2.5rem;
+		border:1px solid #aaa;
+		border-radius: 25px;
+		padding: 0 1rem;
+}
+.snt-btns-box-four .snt-btns li{
+		float: left;
+		text-align: center;
+}
+.snt-btns-box-four .snt-btns li:nth-child(1){
+	margin: 0.1rem 0.6rem;
+}
+.snt-btns-box-four .snt-btns li:nth-child(2){
+	margin: 0.1rem 0.6rem;
+}
+.snt-btns-box-four .snt-btns li:nth-child(3){
+	margin: 0.1rem 0.7rem;
+}
+.snt-btns-box-four .snt-btns li:nth-child(4){
+	margin: 0.1rem 0;
 }
 /*重写aui样式*/
 .aui-bar-nav {
