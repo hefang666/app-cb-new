@@ -1,4 +1,3 @@
-
 var apiUrl = 'http://' + $api.getStorage('apiUrl');
 
 
@@ -54,10 +53,10 @@ function getTime(data) {
  * @param 任意
  * @return 对象
  */
- Object.prototype.assignNew = function() {
+Object.prototype.assignNew = function() {
     var obj = arguments[0]
-    for(var i = 1; i< arguments.length; i++) {
-        for(var prop in arguments[i]) {
+    for (var i = 1; i < arguments.length; i++) {
+        for (var prop in arguments[i]) {
             obj[prop] = arguments[i][prop]
         }
     }
@@ -172,138 +171,153 @@ function setIOSBar() {
     });
 }
 
-function changeFontSize(){
-  var changeSize = $api.getStorage('fontSize');
-  if(changeSize == undefined || changeSize == 'normal'){
-    document.body.style.setProperty('--fontsize9', '0.9rem');
-    document.body.style.setProperty('--fontsize85', '0.85rem');
-    document.body.style.setProperty('--fontsize8', '0.8rem');
-    document.body.style.setProperty('--fontsize75', '0.75rem');
-    document.body.style.setProperty('--fontsize7', '0.7rem');
-    document.body.style.setProperty('--fontsize65', '0.65rem');
-    document.body.style.setProperty('--fontsize6', '0.6rem');
-    document.body.style.setProperty('--fontsize55', '0.55rem');
-    document.body.style.setProperty('--fontsize5', '0.5rem');
-    document.body.style.setProperty('--fontsize45', '0.45rem');
-    document.body.style.setProperty('--fontsize4', '0.4rem');
-    document.body.style.setProperty('--width2', '2rem');
-    document.body.style.setProperty('--width34', '3.4rem');
-    document.body.style.setProperty('--width42', '4.2rem');
-  }else if(changeSize == 'large'){
-    document.body.style.setProperty('--fontsize9', '0.99rem');
-    document.body.style.setProperty('--fontsize85', '0.935rem');
-    document.body.style.setProperty('--fontsize8', '0.88rem');
-    document.body.style.setProperty('--fontsize75', '0.825rem');
-    document.body.style.setProperty('--fontsize7', '0.77rem');
-    document.body.style.setProperty('--fontsize65', '0.715rem');
-    document.body.style.setProperty('--fontsize6', '0.66rem');
-    document.body.style.setProperty('--fontsize55', '0.605rem');
-    document.body.style.setProperty('--fontsize5', '0.55rem');
-    document.body.style.setProperty('--fontsize45', '0.495rem');
-    document.body.style.setProperty('--fontsize4', '0.44rem');
-    document.body.style.setProperty('--width2', '2.2rem');
-    document.body.style.setProperty('--width34', '3.74rem');
-    document.body.style.setProperty('--width42', '4.62rem');
-  }else if(changeSize == 'small'){
-    document.body.style.setProperty('--fontsize9', '0.81rem');
-    document.body.style.setProperty('--fontsize85', '0.765rem');
-    document.body.style.setProperty('--fontsize8', '0.72rem');
-    document.body.style.setProperty('--fontsize75', '0.675rem');
-    document.body.style.setProperty('--fontsize7', '0.63rem');
-    document.body.style.setProperty('--fontsize65', '0.585rem');
-    document.body.style.setProperty('--fontsize6', '0.54em');
-    document.body.style.setProperty('--fontsize55', '0.495rem');
-    document.body.style.setProperty('--fontsize5', '0.45rem');
-    document.body.style.setProperty('--fontsize45', '0.405rem');
-    document.body.style.setProperty('--fontsize4', '0.36rem');
-    document.body.style.setProperty('--width2', '1.8rem');
-    document.body.style.setProperty('--width34', '3.06rem');
-    document.body.style.setProperty('--width42', '3.78rem');
-  }
+function changeFontSize() {
+    var changeSize = $api.getStorage('fontSize');
+    if (changeSize == undefined || changeSize == 'normal') {
+        document.body.style.setProperty('--fontsize9', '0.9rem');
+        document.body.style.setProperty('--fontsize85', '0.85rem');
+        document.body.style.setProperty('--fontsize8', '0.8rem');
+        document.body.style.setProperty('--fontsize75', '0.75rem');
+        document.body.style.setProperty('--fontsize7', '0.7rem');
+        document.body.style.setProperty('--fontsize65', '0.65rem');
+        document.body.style.setProperty('--fontsize6', '0.6rem');
+        document.body.style.setProperty('--fontsize55', '0.55rem');
+        document.body.style.setProperty('--fontsize5', '0.5rem');
+        document.body.style.setProperty('--fontsize45', '0.45rem');
+        document.body.style.setProperty('--fontsize4', '0.4rem');
+        document.body.style.setProperty('--width2', '2rem');
+        document.body.style.setProperty('--width34', '3.4rem');
+        document.body.style.setProperty('--width42', '4.2rem');
+    } else if (changeSize == 'large') {
+        document.body.style.setProperty('--fontsize9', '0.99rem');
+        document.body.style.setProperty('--fontsize85', '0.935rem');
+        document.body.style.setProperty('--fontsize8', '0.88rem');
+        document.body.style.setProperty('--fontsize75', '0.825rem');
+        document.body.style.setProperty('--fontsize7', '0.77rem');
+        document.body.style.setProperty('--fontsize65', '0.715rem');
+        document.body.style.setProperty('--fontsize6', '0.66rem');
+        document.body.style.setProperty('--fontsize55', '0.605rem');
+        document.body.style.setProperty('--fontsize5', '0.55rem');
+        document.body.style.setProperty('--fontsize45', '0.495rem');
+        document.body.style.setProperty('--fontsize4', '0.44rem');
+        document.body.style.setProperty('--width2', '2.2rem');
+        document.body.style.setProperty('--width34', '3.74rem');
+        document.body.style.setProperty('--width42', '4.62rem');
+    } else if (changeSize == 'small') {
+        document.body.style.setProperty('--fontsize9', '0.81rem');
+        document.body.style.setProperty('--fontsize85', '0.765rem');
+        document.body.style.setProperty('--fontsize8', '0.72rem');
+        document.body.style.setProperty('--fontsize75', '0.675rem');
+        document.body.style.setProperty('--fontsize7', '0.63rem');
+        document.body.style.setProperty('--fontsize65', '0.585rem');
+        document.body.style.setProperty('--fontsize6', '0.54em');
+        document.body.style.setProperty('--fontsize55', '0.495rem');
+        document.body.style.setProperty('--fontsize5', '0.45rem');
+        document.body.style.setProperty('--fontsize45', '0.405rem');
+        document.body.style.setProperty('--fontsize4', '0.36rem');
+        document.body.style.setProperty('--width2', '1.8rem');
+        document.body.style.setProperty('--width34', '3.06rem');
+        document.body.style.setProperty('--width42', '3.78rem');
+    }
 }
 
 changeFontSize();
 
 //图标颜色取值
-var echatsColor = ['#9968F7','#F3983A','#5EBFF3','#70DD78','#3052F5','#ED536C','#DD5CF3','#8E8CC4','#FDF366'];
+var echatsColor = ['#9968F7', '#F3983A', '#5EBFF3', '#70DD78', '#3052F5', '#ED536C', '#DD5CF3', '#8E8CC4', '#FDF366'];
 
 // 验证手机号码
-function checkTrue( that) {
-  // .replace(/:/g,'')去掉特殊字符
- var name = $(that).attr('attr-name').replace('',"");
- var value = $(that).val();
- if(!(value.match(/^((0\d{2,3}-\d{7,8})|(1[35847]\d{9}))$/))){
-   api.toast({
-       msg:''+name+'格式不正确',
-       duration: 2000,
-       location: 'top'
-   });
-    return false;
- }
+function checkTrue(that) {
+    // .replace(/:/g,'')去掉特殊字符
+    var name = $(that).attr('attr-name').replace('', "");
+    var value = $(that).val();
+    if (!(value.match(/^((0\d{2,3}-\d{7,8})|(1[35847]\d{9}))$/))) {
+        api.toast({
+            msg: '' + name + '格式不正确',
+            duration: 2000,
+            location: 'top'
+        });
+        return false;
+    }
 
 
 }
 // 验证手机号码
-function checkPhone( name,value) {
- if(!(value.match(/^((0\d{2,3}-\d{7,8})|(1[35847]\d{9}))$/))){
-   api.toast({
-       msg:''+name+'格式不正确',
-       duration: 2000,
-       location: 'top'
-   });
-    return false;
- } else {
-   return true;
- }
+function checkPhone(name, value) {
+    if (!(value.match(/^((0\d{2,3}-\d{7,8})|(1[35847]\d{9}))$/))) {
+        api.toast({
+            msg: '' + name + '格式不正确',
+            duration: 2000,
+            location: 'top'
+        });
+        return false;
+    } else {
+        return true;
+    }
 }
 
 
 // zxf 模拟弹窗
-function dialogAlert(params,callback){
+function dialogAlert(params, callback) {
     var BtnNumbers = '';
-    if(params.buttons.length != 0 || params.buttons!=undefined){
-      var buttons = params.buttons;
-       for(var i=0;i<buttons.length;i++){
-          BtnNumbers += '<div class="dialogBtn" data-attr="'+ (i+1) + '">${buttons[i]}</div>';
-       }
+    if (params.buttons.length != 0 || params.buttons != undefined) {
+        var buttons = params.buttons;
+        for (var i = 0; i < buttons.length; i++) {
+            BtnNumbers += '<div class="dialogBtn" data-attr="' + (i + 1) + '">${buttons[i]}</div>';
+        }
     }
-    if(BtnNumbers == ''){
-      BtnNumbers ='<div class="dialogBtn" data-attr="1">确定</div><div class="dialogBtn" data-attr="2">取消</div>';
+    if (BtnNumbers == '') {
+        BtnNumbers = '<div class="dialogBtn" data-attr="1">确定</div><div class="dialogBtn" data-attr="2">取消</div>';
     }
     var HtmlCentent = '<div class="dilogMark">' +
-          '<div class="dialogBox">' +
-              '<div class="dialog_title"><span>' + (params.title!="" || params.title!=undefined  || params.title!= null ?params.title : "提示") + '</span></div>' +
-              '<div class="dialog_body"><span>' + (params.content !="" || params.content !=undefined ? params.content:"确定要操作吗") + '</span></div>'
-              '<div class="dialog_footer">'
-                 + BtnNumbers +
-              '</div>'
-          '</div>' +
-      '</div>';
-      // 在标签结束前添加html内容
-   document.body.insertAdjacentHTML('beforeend', HtmlCentent);
+        '<div class="dialogBox">' +
+        '<div class="dialog_title"><span>' + (params.title != "" || params.title != undefined || params.title != null ? params.title : "提示") + '</span></div>' +
+        '<div class="dialog_body"><span>' + (params.content != "" || params.content != undefined ? params.content : "确定要操作吗") + '</span></div>'
+    '<div class="dialog_footer">' +
+    BtnNumbers +
+        '</div>'
+    '</div>' +
+    '</div>';
+    // 在标签结束前添加html内容
+    document.body.insertAdjacentHTML('beforeend', HtmlCentent);
     // 为按钮添加单击事件
-   checkDialogBtn(callback);
+    checkDialogBtn(callback);
 };
-function checkDialogBtn(callback){
-  var dialogBtn = $('.dialogBtn');
-   $(dialogBtn[dialogBtn.length-1]).addClass('noneBorder');
-  var isClose = false;
-  for(var i=0;i<dialogBtn.length;i++){
-    $(dialogBtn[i]).on('click',function(){
-         $(this).addClass("active");
-        var index= $(this).attr('data-attr');
-         //  确定
-          var data ={
-            buttonIndex:index
-          }
-          callback(data);
-        // 移除标签
-          document.body.removeChild(document.querySelector('.dilogMark'));
 
-          isClose =true;
-    });
-    if(isClose){
-      break;
+function checkDialogBtn(callback) {
+    var dialogBtn = $('.dialogBtn');
+    $(dialogBtn[dialogBtn.length - 1]).addClass('noneBorder');
+    var isClose = false;
+    for (var i = 0; i < dialogBtn.length; i++) {
+        $(dialogBtn[i]).on('click', function() {
+            $(this).addClass("active");
+            var index = $(this).attr('data-attr');
+            //  确定
+            var data = {
+                buttonIndex: index
+            }
+            callback(data);
+            // 移除标签
+            document.body.removeChild(document.querySelector('.dilogMark'));
+
+            isClose = true;
+        });
+        if (isClose) {
+            break;
+        }
     }
-  }
+}
+
+/*
+ * @method trim  删除字符串前后和中间所有空格
+ * @param {String} str 字符串
+ * @param {String} is_global 正则g 替换所有 否则只替换第一个匹配串
+ */
+function trim(str, is_global) {
+    var result;
+    result = str.replace(/(^\s+)|(\s+$)/g, "");
+    if (is_global.toLowerCase() == "g") {
+        result = result.replace(/\s/g, "");
+    }
+    return result;
 }

@@ -46,3 +46,13 @@ function openWin(name, url, extra) {
 function backWin() {
     api.closeWin({});
 }
+
+/*
+* @method showProgress  显示进度提示框
+* @param {String} title 标题
+* @param {Object} extra 其他参数
+*/
+function showProgress(title,extra) {
+  if(!title) return false;
+  api.showProgress(Object.assignNew({},{"title":title}, extra || {}));
+}
