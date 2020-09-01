@@ -56,3 +56,13 @@ function showProgress(title,extra) {
   if(!title) return false;
   api.showProgress(Object.assignNew({},{"title":title}, extra || {}));
 }
+
+/*
+* @method toast  弹出一个定时自动关闭的提示框
+* @param {String} msg 标题
+* @param {Object} extra 其他参数
+*/
+function toast(msg,extra) {
+  if(!msg) return false;
+  api.toast(Object.assignNew({},{"msg":msg}, extra || {}));
+}

@@ -368,17 +368,20 @@ footer.aui-bar-tab ~ .snt-container {
 .service-list .aui-radio, .service-list .aui-checkbox {
 	vertical-align: -7px;
 }
+.check1{
+		width: 0.7rem;
+	  height: 0.7rem;
+		background-size: 0.7rem 0.7rem;
+		margin: 0.8rem 0.3rem 0 0.3rem;
+		display: inline-block;
+}
 .check-true, .check-false {
-	width: 0.7rem;
-    height: 0.7rem;
     background: url(../image/mine_frame/checkTrue.jpg);
-    background-size: 0.7rem 0.7rem;
-    margin: 0.8rem 0.3rem 0 0.3rem;
-	display: inline-block;
+		background-size: 0.7rem 0.7rem;
 }
 .check-false {
-	background: url(../image/mine_frame/checkFalse.jpg);
-	background-size: 0.7rem 0.7rem;
+		background: url(../image/mine_frame/checkFalse.jpg);
+		background-size: 0.7rem 0.7rem;
 }
 
 /*表单列表*/
