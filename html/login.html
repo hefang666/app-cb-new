@@ -24,7 +24,7 @@
                 <div class="aui-margin-b-15"><div class="aui-btn aui-btn-white aui-btn-semi" onclick="Login()">立即登录</div></div>
                 <div class="snt-login-ohters">
                     <div class=""><input type="checkbox" class="aui-checkbox snt-login-checkbox" value="">自动登录</div>
-                    <div class="">设置服务器</div>
+                    <div class="" onclick="openServiceAddress()">设置服务器</div>
                 </div>
             </div>
         </div>
@@ -33,13 +33,23 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/city/jquery.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/apiCommon.js"></script>
 <script type="text/javascript">
+    apiready = function(){
+
+    }
     // 立即登录
     function Login(){
         var userName = $api.byId('username').value;
         var password = $api.byId('password').value;
         var serviceAddress = $api.getStorage('apiUrl');
         console.log(serviceAddress);
+    }
+    //  设置服务器
+    function openServiceAddress() {
+        //首先先判断是否设置了服务器，没设置则提示设置服务器
+        openWin('settingService', './mine/settingService.html');
     }
 </script>
 

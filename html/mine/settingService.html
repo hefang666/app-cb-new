@@ -11,13 +11,65 @@
 </head>
 
 <body>
-    <div id="wrap">
-        设置服务器
+    <div class="snt-container">
+        <header class="aui-bar aui-bar-nav snt-bar-fiexd aui-bar-light">
+            <a class="aui-pull-left aui-btn">
+                <span class="aui-iconfont aui-icon-left" onclick="backWin()"></span>
+            </a>
+            <div class="aui-title">设置服务器</div>
+        </header>
+        <div class="snt-service-content">
+            <section>
+                <ul class="aui-list aui-form-list service-list">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <label class="list-label">地址1:</label>
+                            <div class="aui-list-item-input">
+                                <input class="aui-padded-l-5" type="text" placeholder="请输入服务器地址" />
+                            </div>
+                            <div class="list-icon">
+                                <div class=" check-true"></div>
+                                <span class="aui-btn aui-btn-outlined aui-btn-sm aui-margin-r-5">检测</span>
+                                <input name="input-service" class="aui-radio" type="radio" />
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <label class="list-label">地址1:</label>
+                            <div class="aui-list-item-input">
+                                <input class="aui-padded-l-5" type="text" placeholder="请输入服务器地址" />
+                            </div>
+                            <div class="list-icon">
+                                <div class=" check-false"></div>
+                                <a name="button" class="aui-btn aui-btn-outlined aui-btn-sm aui-margin-r-5">检测</a>
+                                <input name="input-service" class="aui-radio" type="radio" />
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <!-- 底部按钮组  -->
+        <section class="aui-content-padded">
+            <div class="snt-btns-box">
+                <ul class="snt-btns">
+                    <li data-action="delete"><i class="iconfont snt-blue">&#xe681;</i><br>删除</li>
+                    <li data-action="addAddress"><i class="iconfont snt-blue">&#xe632;</i><br>新增</li>
+                    <li data-action="OpenAddress"><i class="iconfont snt-blue">&#xe718;</i><br>启用地址</li>
+                    <li class="snt-clear"></li>
+                </ul>
+            </div>
+        </section>
     </div>
 
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/city/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/apiCommon.js"></script>
 <script type="text/javascript">
 
 </script>

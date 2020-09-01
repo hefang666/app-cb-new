@@ -6,7 +6,8 @@
 
 function onEvent(options) {
     if(!options.name) return false;
-    var eventOption = Object.assign({}, {name: options.name}, options.extra || {});
+    var eventOption = Object.assignNew({}, {name: options.name}, options.extra || {});
+    //console.log(JSON.stringify(eventOption));
     api.addEventListener(eventOption, function(ret, err){
         console.log(ret, err)
         if(!err) {
@@ -25,7 +26,7 @@ function onEvent(options) {
 */
 function sendEvent(name, extra) {
     if(!name) return false;
-    api.sendEvent(Object.assign({}, {name}, extra || {}));
+    api.sendEvent(Object.assignNew({}, {"name":name}, extra || {}));
 }
 
 /*
@@ -36,5 +37,12 @@ function sendEvent(name, extra) {
 */
 function openWin(name, url, extra) {
     if(!name || !url) return false;
-    api.openWin(Object.assign({}, {name, url}, extra || {}))
+    api.openWin(Object.assignNew({},{"name":name,"url":url}, extra || {}))
+}
+
+/*
+* @method backWin  返回上一页面
+*/
+function backWin() {
+    api.closeWin({});
 }

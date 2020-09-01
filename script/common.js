@@ -49,6 +49,21 @@ function getTime(data) {
     }
 }
 
+/**
+ * 合并对象重写
+ * @param 任意
+ * @return 对象
+ */
+ Object.prototype.assignNew = function() {
+    var obj = arguments[0]
+    for(var i = 1; i< arguments.length; i++) {
+        for(var prop in arguments[i]) {
+            obj[prop] = arguments[i][prop]
+        }
+    }
+    return obj
+}
+
 //判断是否为空
 function isEmpty(mixed_var) {
     var key;

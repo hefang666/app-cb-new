@@ -1,23 +1,304 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>抄表APP启动页</title>
 </head>
+
 <body>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript" src="./script/apiCommon.js"></script>
 <script type="text/javascript">
-    apiready = function(){
-      // 跳转到主页面
-      api.openWin({
-          name: 'main',
-          url: './html/main.html',
-          bounces: false,
-          slidBackEnabled: false,
-      });
-    }
+    apiready = function() {
+        // 进入抄表APP页面逻辑
+
+        // 跳转到主页面
+        // openWin('main', './html/main.html',{});
+        // api.openWin({
+        //     name: 'main',
+        //     url: './html/main.html',
+        //     bounces: false,
+        //     slidBackEnabled: false,
+        // });
+
+
+        onEvent({
+            name: 'changedFontSize',
+            success: function() {
+                changeFontSize();
+            }
+        })
+
+        /*
+          云修复使用静默修复时，更新完毕事件
+          可通过监听此事件来通知用户做是否强制重启应用等操作或者提示，以使更新生效，字符串类型
+        */
+        onEvent({
+            name: 'smartupdatefinish',
+            success: function() {
+                changeFontSize();
+            }
+        })
+
+        onEvent({
+            name: 'sendLocation',
+            success: function() {
+                clearInterval(timer);
+                if ($api.getStorage('kfUserId') && $api.getStorage('kfUserId') != null) {
+                    sendLocation();
+                }
+                timer = setInterval(function() {
+                    if ($api.getStorage('kfUserId') && $api.getStorage('kfUserId') != null) {
+                        sendLocation();
+                    } else {
+                        clearInterval(timer);
+                    }
+                }, 1800000);
+            }
+        })
+
+        onEvent({
+            name: 'sendLocationNow',
+            success: function() {
+                sendLocation();
+            }
+        })
+
+        api.getPrefs({        
+            key: 'isFistUse'    
+        }, function(ret, err) {        
+            if (ret.value === '') {            
+                $api.setStorage('sendLocation', true)
+                api.setPrefs({                
+                    key: 'isFistUse',
+                    value: true
+                });        
+            }
+        })
+
+        /* 发布事件广播 */
+        sendEvent('pause')
+        sendEvent('resume')
+
+        deviceId = api.deviceId;
+        if (api.systemType == 'ios') {
+            api.setStatusBarStyle({
+                style: 'light',
+                color: 'white'
+            });
+        }
+
+        jpush = api.require('ajpush');
+        jpush.getRegistrationId(function(ret) {
+            var registrationId = ret.id;
+            $api.setStorage('registrationId', registrationId);
+        });
+
+        /* 改app被其他应用调用的时候监听事件 */
+        onEvent({
+            name: 'appintent',
+            success: openByOutside
+        });
+
+
+        // 状态栏通知回调事件监听
+        onEvent({
+            name: 'noticeclicked',
+            success: openByOutside
+        });
+
+        onEvent({
+            name: 'pause',
+            callback: function() {
+                onPause(); //监听应用进入后台，通知jpush暂停事件
+                $api.setStorage("isnoinited", "0"); //后台
+            }
+        });
+
+        onEvent({
+            name: 'resume',
+            callback: function() {
+                onResume(); //监听应用恢复到前台，通知jpush恢复事件
+                $api.setStorage("isnoinited", "1"); //前台
+            }
+        });
+
+
+        deviceId = api.deviceId;
+        // console.log(deviceId);
+        var systemType = api.systemType;
+        // console.log(systemType)
+        if (systemType == 'android') {
+
+        } else if (systemType == 'ios') {
+            deviceId = deviceId.replace(/-/g, "");
+        }
+
+        api.getPrefs({        
+            key: 'isNeedWelcome'    
+        }, function(ret, err) {        
+            if (ret.value === '') {            
+                jpush.setBadge({
+                    badge: 0
+                });
+                api.setPrefs({                
+                    key: 'isNeedWelcome',
+                    value: true
+                });        
+            } else {
+
+            }
+        });
+
+        //判断是否选择了自动登录，若是且有登录信息，直接跳转到主页面
+        if ($api.getStorage('autoLogin') == 1) {
+            if ($api.getStorage('loginInfo')) {
+                console.log($api.getStorage('loginInfo'))
+                openMain();
+                // openFrameGroup();
+            } else {
+                //打开登录frame页面
+                openLogin();
+            }
+        } else {
+            //打开登录frame页面
+            openLogin();
+        }
+
+        // 打开登陆页面
+        function openLogin() {
+            openWin('login', './html/login.html', {
+                slidBackEnabled: false,
+                //bgColor: './image/login/login_backgroud.png'
+            })
+        }
+
+        // 打开主页
+        function openMain() {
+            openWin('main', './html/main.html', {
+                bounces: false,
+                slidBackEnabled: false,
+            })
+        }
+
+        // 改app被从外部调用打开的时回调事件
+        function openByOutside(ret) {
+            // alert('通知被点击，收到数据：\n' + JSON.stringify(ret));//监听通知被点击后收到的数据
+            if ($api.getStorage('loginInfo')) {
+                var extra = ret.appParam.enable;
+                if (extra) {
+                    if (extra.LinkType == 2) {
+                        var winName = extra.LinkUrl;
+                        var index = winName.lastIndexOf('/');
+                        var index2 = winName.indexOf('.html');
+                        if (index != -1 && index2 != -1) {
+                            winName = winName.substring(index + 1, index2);
+                        }
+                        var data = JSON.parse(extra.Data);
+                        openWin(winName, extra.LinkUrl, {
+                            pageParam: data
+                        })
+                    } else {
+                        openMain();
+                    }
+                } else {
+                    openMain();
+                }
+                // openFrameGroup();
+            }
+            //监听应用恢复到前台，通知jpush恢复事件
+            onResume();
+            // jpush.setBadge({
+            //     badge: 0
+            // });
+            var param = {
+                id: -1
+            };
+            jpush.clearNotification(param, function(ret) {
+                if (ret && ret.status) {
+                    //success
+                }
+            });
+            $api.setStorage("isnoinited", "1"); //前台
+        }
+
+        //统计-app恢复
+        function onResume() {
+            jpush.onResume();
+            // console.log('JPush onResume');
+        }
+        //统计-app暂停
+        function onPause() {
+            jpush.onPause();
+            // console.log('JPush onPause');
+        }
+
+        function checkTime() {
+            var time = moment().format('HH:mm:ss').split(':');
+            var quit = false;
+            if (time[0] > '21' || time[0] < '06') {
+                quit = true;
+            } else if (time[0] == '21') {
+                if (time[1] > '00') {
+                    quit = true;
+                } else if (time[1] == '00') {
+                    if (time[2] > '00') {
+                        quit = true;
+                    }
+                }
+            }
+            return quit
+        }
+
+        function openFrameGroup() {
+            api.openTabLayout({
+                name: 'main',
+                url: 'widget://html/main.html',
+                bounces: false,
+                slidBackEnabled: false,
+                hideTabBar: false,
+                animated: true,
+                tabBar: {
+                    height: 50,
+                    selectedColor: '#4f79e8',
+                    shadow: '#e6e6e6',
+                    fontSize: 12,
+                    textOffset: 6,
+                    scrollEnabled: false,
+                    list: [{
+                        text: "首页",
+                        iconPath: "widget://image/main/main.png",
+                        selectedIconPath: "widget://image/main/main_active.png"
+                    }, {
+                        text: "消息",
+                        iconPath: "widget://image/main/message.png",
+                        selectedIconPath: "widget://image/main/message_active.png"
+                    }, {
+                        text: "我的",
+                        iconPath: "widget://image/main/mine.png",
+                        selectedIconPath: "widget://image/main/mine_active.png"
+                    }],
+                    frames: [{
+                        name: "main_frame",
+                        url: "widget://html/work/main_frame.html"
+                    }, {
+                        name: "message_frame",
+                        url: "widget://html/message/message_frame.html"
+                    }, {
+                        name: "mine_frame",
+                        url: "widget://html/mine/mine_frame.html"
+                    }]
+                }
+            });
+        }
+
+        function sendLocation() {}
+  }
 </script>
+
 </html>
