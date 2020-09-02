@@ -245,7 +245,7 @@
               <br>
               <p>
                 <div class="aui-btn aui-btn-blue aui-btn-middle aui-btn-semi">确认</div>
-                <div class="aui-btn aui-btn-blue aui-btn-outlined aui-btn-middle aui-btn-semi">取消</div>
+                <div class="aui-btn aui-btn-blue aui-btn-outlined aui-btn-middle aui-btn-semi" onclick="loginOut()">注销</div>
               </p>
               <br>
               <p>
@@ -341,6 +341,28 @@
         api.parseTapmode();
         tabInit();
     }
+    // 注销
+    //注销操作，清空登录信息，回到登录页面
+    // function loginOut() {
+    //     api.openFrame({
+    //         name: 'delete_frame',
+    //         url: '../delete_frame.html',
+    //         rect: {
+    //             x: 0,
+    //             y: 0,
+    //             w: 'auto',
+    //             h: 'auto'
+    //         },
+    //         pageParam: {
+    //             msg: '确定退出当前账号吗？',
+    //             winName: 'main',
+    //             frameName: 'mine_frame',
+    //             jsfun: "loginOutSure()"
+    //         },
+    //         bounces: false,
+    //         bgColor: 'rgba(0,0,0,0.1)',
+    //     });
+    // }
 
     // tab
     function tabInit(){

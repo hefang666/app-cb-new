@@ -9,7 +9,6 @@ function onEvent(options) {
     var eventOption = Object.assignNew({}, {name: options.name}, options.extra || {});
     //console.log(JSON.stringify(eventOption));
     api.addEventListener(eventOption, function(ret, err){
-        console.log(ret, err)
         if(!err) {
             options.success ? options.success(ret) : ''
         } else {

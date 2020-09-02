@@ -88,6 +88,26 @@ td,th {
 	color:#aaa;
 }
 
+/* header 浸入式兼容4*/
+.header-box {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  background: #fff;
+}
+.main-box {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: #F5F5F5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  padding-top: 10px;
+}
+
 /*aui重写 按钮*/
 /*按钮半圆*/
 .aui-btn.aui-btn-semi{
@@ -277,6 +297,14 @@ td,th {
 .aui-bar-nav {
   	/*background-color: linear-gradient(yellow, blue);*/
   	/*background-color: blue;*/
+}
+/*头部样式 白底黑字*/
+.snt-nav-normal .aui-bar-nav{
+		background-color:#fff;
+		color:#000;
+}
+.snt-nav-normal .aui-icon-left{
+		color:#000 !important;
 }
 
 .snt-bar-fiexd {

@@ -16,14 +16,17 @@
         <div class="snt-login-box">
             <div class="snt-login-form">
                 <div class="snt-input aui-margin-b-15">
-                    <input id="username" type="text" placeholder="用户名"><i class="aui-iconfont aui-icon-down"></i>
+                    <input id="username" type="text" placeholder="用户名"><i class="userSelect aui-iconfont aui-icon-down"  onclick="showRememberedUser()"></i>
                 </div>
-                <div class="snt-input aui-margin-b-15">
-                    <input id="password" type="password" placeholder="密码"><i class="aui-iconfont aui-icon-hide"></i>
+                <div class="loginedUsers" style="display:none">
+
                 </div>
-                <div class="aui-margin-b-15"><div class="aui-btn aui-btn-white aui-btn-semi" onclick="Login()">立即登录</div></div>
-                <div class="snt-login-ohters">
-                    <div class=""><input type="checkbox" class="aui-checkbox snt-login-checkbox" value="">自动登录</div>
+                <div id="pwInput" class="snt-input aui-margin-b-15">
+                    <input id="password" type="password" placeholder="密码"><i class="aui-iconfont aui-icon-hide" id="whetherShow" onclick="ShowOrHidePassword()"></i>
+                </div>
+                <div class="aui-margin-b-15" id="loginBtn"><div class="aui-btn aui-btn-white aui-btn-semi" onclick="Login()">立即登录</div></div>
+                <div class="snt-login-ohters" id="autoAndforget">
+                    <div id="select" class=""><input type="checkbox" id="self-p" class="aui-checkbox snt-login-checkbox" onclick="autoLogin()" value="">自动登录</div>
                     <div class="" onclick="openServiceAddress()">设置服务器</div>
                 </div>
             </div>
@@ -32,21 +35,342 @@
 
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
-<script type="text/javascript" src="../script/city/jquery.min.js"></script>
+<script type="text/javascript" src="../script/zepto.js"></script>
+<!-- <script type="text/javascript" src="../script/city/jquery.min.js"></script> -->
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript" src="../script/apiCommon.js"></script>
+<script type="text/javascript" src="../script/remote.js"></script>
 <script type="text/javascript">
+    var remember = false;
+    var checkbox = $api.byId('self-p');
+    var first = null;
+    var apiUrl;
+    //登陆过的用户数据存放
+    var loginedData = [];
+
     apiready = function(){
-        var serviceAddress = $api.getStorage('apiUrl');
+        onEvent({
+            name: 'changedFontSize',
+            success: function(ret, err) {
+                if (ret) {
+                    changeFontSize();
+                }
+            }
+        })
+        api.parseTapmode();
+
+        onEvent({
+            name: 'keyback',
+            success: function(ret, err) {
+                cancelAjax();
+                if (!first) {
+                    first = new Date().getTime();
+                    api.toast({
+                        msg: '再按一次退出',
+                        duration: 1500,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        first = null;
+                    }, 2000);
+                } else {
+                    if (new Date().getTime() - first < 2000) {
+                        api.closeWidget({
+                            silent: true
+                        });
+                    }
+                }
+            }
+        })
+        // 隐藏登录名 历史输入值
+        $('.loginedUsers').hide();
+        isAutoLogin();
+        setRememberedUser();
+        //  监听是否设置了服务器
+        // 监听是否修改了服务器地址
+        onEvent({
+            name: 'changeApiUrl',
+            success: function(ret, err) {
+                if (ret) {
+                    var serviceAddress = $api.getStorage('apiUrl');
+                    apiUrl = 'http://' + serviceAddress;
+                }
+            }
+        })
+
+        //var serviceAddress = $api.getStorage('apiUrl');
         //console.log(serviceAddress);
     }
+
+    function cancelAjax() {
+        api.cancelAjax({
+            tag: 'getTenantCode'
+        });
+        api.cancelAjax({
+            tag: 'login'
+        });
+        api.hideProgress();
+    }
+
+    var flag = false;
+    $('#username').on({
+        'compositionstart': function() {
+            flag = true;
+        },
+        'compositionend': function() {
+            flag = false;
+            if (!flag) {
+                cancelAjax();
+            }
+        },
+        'input propertychange': function() {
+            if (!flag) {
+                cancelAjax();
+            }
+        }
+    });
+
+    $('#password').on({
+        'compositionstart': function() {
+            flag = true;
+        },
+        'compositionend': function() {
+            flag = false;
+            if (!flag) {
+                cancelAjax();
+            }
+        },
+        'input propertychange': function() {
+            if (!flag) {
+                cancelAjax();
+            }
+        }
+    });
+
+    //点击图标，查看密码
+    function ShowOrHidePassword() {
+        var eyes = $api.byId('whetherShow');
+        var pass = $api.byId('password');
+        if ($api.hasCls(eyes, 'aui-icon-display')) {
+            $api.removeCls(eyes, 'aui-icon-display');
+            $api.addCls(eyes, 'aui-icon-hide');
+            $api.attr(pass, 'type', 'password');
+        } else {
+            $api.removeCls(eyes, 'aui-icon-hide');
+            $api.addCls(eyes, 'aui-icon-display');
+            $api.attr(pass, 'type', 'text');
+        }
+    }
+    //自动登录勾选
+    function autoLogin() {
+        $api.toggleCls(checkbox, 'checked');
+        if ($api.hasCls(checkbox, 'checked')) {
+            remember = true;
+            $api.setStorage('autoLogin', 1);
+        } else {
+            remember = false;
+            $api.setStorage('autoLogin', 2);
+            $api.rmStorage('loginInfo');
+        }console.log(remember);
+    }
+    //判断上次是否选择自动登录并默认设置自动登录的checkbox
+    function isAutoLogin() {
+        if (!$api.getStorage('autoLogin')) {
+            $api.setStorage('autoLogin', 1);
+            $api.addCls(checkbox, 'checked');
+        } else if ($api.getStorage('autoLogin') == 2) {
+            $api.removeCls(checkbox, 'checked');
+        }
+    }
+
+    var isValued = false;
+    var recentUser = {
+        account: "",
+        password: ""
+    };
+
+    //记录登录过的用户，点击可以选择，点删除图标可以删除
+    function setRememberedUser() {
+        if ($api.getStorage('loginUsers')) {
+            var data = $api.getStorage('loginUsers');
+            var recentUserData = $api.getStorage('recentUser');
+            var url = $api.getStorage('apiUrl');
+            if (recentUserData) {
+                $('#username').val(recentUserData.account);
+                // $('#password').val(recentUserData.password);
+            }
+            var html = "";
+            $('.loginedUsers').html('');
+            for (var i = 0; i < data.length; i++) {
+                var row = '<div class="userRow"><span class="input" id="user' + i + '">' + data[i].account + '</span><span style="display:none" id="pw' + i + '">' + data[i].password + '</span><i class="aui-iconfont aui-icon-close" id="close' + i +'" ></i></div>';
+                html += row;
+            };
+            $('.loginedUsers').append(html);
+            for (var j = 0; j < data.length; j++) {
+                $('#user' + j + '').on('touchstart', function() {
+                    $('#username').val($(this).html());
+                    // $('#password').val($(this).next().html());
+                    isValued = true;
+                    // $('.userSelect').removeClass('active');
+                    $('.userSelect').removeClass('aui-icon-top');
+                    $('.userSelect').addClass('aui-icon-down');
+                    $('.loginedUsers').hide();
+                    $('#username').removeAttr('readonly');
+                    $('#pwInput').show();
+                    $('#loginBtn').show();
+                    $('#autoAndforget').show();
+                    $('#password').focus(function() {
+                        if (isValued) {
+                            $('#password').blur();
+                            isValued = false;
+                        }
+                    });
+                });
+                $('#close' + j + '').on('touchstart', function() {
+                    var log = $api.getStorage('loginUsers');
+                    var account = $(this).prev().prev().html();
+                    for (var i = 0; i < log.length; i++) {
+                        if (log[i].account == account) {
+                            log.splice(i, 1);
+                            $api.setStorage('loginUsers', log);
+                            break
+                        }
+                    }
+                    $(this).parents('.userRow').remove();
+                });
+            }
+        }
+    }
+
+    //下拉显示登录过的用户
+    function showRememberedUser() {
+        if ($('.userSelect').hasClass('aui-icon-down')) {
+            $('.userSelect').removeClass('aui-icon-down');
+            $('.userSelect').addClass('aui-icon-top');
+
+            $('.loginedUsers').show();
+            $('#username').attr('readonly', 'true');
+            $('#pwInput').hide();
+            $('#loginBtn').hide();
+            $('#autoAndforget').hide();
+        } else {
+            $('.userSelect').removeClass('aui-icon-top');
+            $('.userSelect').addClass('aui-icon-down');
+
+            $('.loginedUsers').hide();
+            $('#username').removeAttr('readonly');
+            $('#pwInput').show();
+            $('#loginBtn').show();
+            $('#autoAndforget').show();
+        }
+    }
+
     // 立即登录
-    function Login(){
+    function Login() {
         var userName = $api.byId('username').value;
         var password = $api.byId('password').value;
         var serviceAddress = $api.getStorage('apiUrl');
-        console.log(serviceAddress);
+        if (serviceAddress == null || serviceAddress == undefined || serviceAddress == ' ') {
+            toast('请先设置服务器',{location: 'middle'});
+            return false;
+        }
+        if (isEmpty(userName) || isEmpty(password)) {
+            toast('手机号或密码不能为空',{location: 'top'});
+            return;
+        }
+        // 用户登录信息 （用于租户token过期后重新自动登录）zxf 2019.12.9
+        var userLoginInformation = new Object();
+        var CurrentLocation = $api.getStorage('CurrentLocation');
+        // console.log(JSON.stringify(CurrentLocation));
+        console.log(remember);
+        var loginData = {
+            userName: userName,
+            password: password,
+            rememberMe: remember,
+            tenantCode: "",
+            encryptPassword: "",
+            lng: "",
+            lat: "",
+            account: "",
+            passWord: ""
+        };
+        var loginDataPc = {
+            userName: userName,
+            password: password,
+            rememberMe: remember,
+            validCode: "",
+            tenantCode: "opengis",
+            sessionId: "",
+            isVerificationCode: true,
+            loginType: ""
+        };
+        // apiUrl= 'http://' + url;
+        //app.apipath = apiUrl + '/api/';
+        userLoginInformation.loginData = loginData;
+        userLoginInformation.loginUrl = apiUrl + '/api/' + 'TokenAuth/APPAuthenticate';
+        userLoginInformation.newVersionRemark = [];
+        userLoginInformation.newVersionNumber = 0;
+        // app
+        fnPost('TokenAuth/APPAuthenticate', {
+            body: JSON.stringify(loginData)
+        }, 'application/json', false, false, function(ret, err) {
+            if (ret) {console.log(JSON.stringify(ret));
+                if (ret.success) {
+                    userLoginInformation.loginSuccessData = ret.result;
+                    $api.setStorage('userLoginInformation', userLoginInformation);
+
+                    var Authorization = 'Bearer ' + ret.result.accessToken;
+                    $api.setStorage('loginInfo', Authorization);
+                    $api.setStorage('allTenants', ret.result.allTenants);
+                    $api.setStorage('tenantId', ret.result.tenantId);
+                    $api.setStorage('loginData', loginData);
+                    loginedData = $api.getStorage('loginUsers');
+                    var userData = {
+                        account: userName,
+                        password: password
+                    }
+                    var bindData = {
+                        userId: ret.result.userId,
+                        machineCode: $api.getStorage('registrationId') //手机唯一编码 index中
+                    }
+                    fnPost('services/app/User/UpdateMachineCode', {
+                        body: JSON.stringify(bindData)
+                    }, 'application/json', true, true, function(ret, err) {})
+                    recentUser.account = userName;
+                    recentUser.password = password;
+                    $api.setStorage('recentUser', recentUser);
+                    if (loginedData == undefined) {
+                        loginedData = [];
+                    }
+                    if (loginedData.length == 0) {
+                        loginedData.push(userData);
+                    } else {
+                        for (var i = 0; i < loginedData.length; i++) {
+                            if (loginedData[i].account == userData.account) {
+                                break
+                            }
+                            if (i == loginedData.length - 1) {
+                                loginedData.push(userData);
+                            }
+                        }
+                    }
+                    $api.setStorage('loginUsers', loginedData);
+                    openWin('main', './main.html', {
+                        bounces: false,
+                        reload: true,
+                        slidBackEnabled: false,
+                        animation: {
+                            type: "reveal", //动画类型（详见动画类型常量）
+                            subType: "from_bottom", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    })
+                    setRememberedUser();
+                }
+            }
+        })
     }
+
     //  设置服务器
     function openServiceAddress() {
         //首先先判断是否设置了服务器，没设置则提示设置服务器

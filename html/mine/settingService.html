@@ -13,12 +13,15 @@
 
 <body>
     <div class="snt-container">
-        <header class="aui-bar aui-bar-nav snt-bar-fiexd aui-bar-light">
-            <a class="aui-pull-left aui-btn">
-                <span class="aui-iconfont aui-icon-left" onclick="backWin()"></span>
-            </a>
-            <div class="aui-title">设置服务器</div>
-        </header>
+        <div class="header-box snt-nav-normal">
+            <header class="aui-bar aui-bar-nav aui-border-b">
+                <a class="aui-pull-left aui-btn">
+                    <span class="aui-iconfont aui-icon-left" onclick="backWin()"></span>
+                </a>
+                <div class="aui-title">设置服务器</div>
+            </header>
+        </div>
+
         <div class="snt-service-content">
             <section>
                 <ul class="aui-list aui-form-list service-list" id="addressDemo">
@@ -94,6 +97,7 @@
 
         api.parseTapmode();
         var header = $api.dom('header');
+        $api.fixStatusBar(header);
         headerH = $api.offset(header).h;
         $('.snt-service-content').css('margin-top', headerH + 'px');
 
@@ -202,7 +206,7 @@
             var that = this;
             $('#snt-service-btn').not(this).removeClass('button_active');
             var str = $(this).parent().siblings('.aui-list-item-input').children().val();
-            var addressValue = trim(str, 'g');
+            var addressValue = $api.trim(str);
             var url = 'http://' + addressValue + '/api/services/app/PushInterface/ConnectionTest'
             showProgress('加载中...',{modal:false});
             api.ajax({
