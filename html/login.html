@@ -171,7 +171,7 @@
             remember = false;
             $api.setStorage('autoLogin', 2);
             $api.rmStorage('loginInfo');
-        }console.log(remember);
+        }
     }
     //判断上次是否选择自动登录并默认设置自动登录的checkbox
     function isAutoLogin() {
@@ -282,7 +282,6 @@
         var userLoginInformation = new Object();
         var CurrentLocation = $api.getStorage('CurrentLocation');
         // console.log(JSON.stringify(CurrentLocation));
-        console.log(remember);
         var loginData = {
             userName: userName,
             password: password,
@@ -314,7 +313,7 @@
         fnPost('TokenAuth/APPAuthenticate', {
             body: JSON.stringify(loginData)
         }, 'application/json', false, false, function(ret, err) {
-            if (ret) {console.log(JSON.stringify(ret));
+            if (ret) {
                 if (ret.success) {
                     userLoginInformation.loginSuccessData = ret.result;
                     $api.setStorage('userLoginInformation', userLoginInformation);

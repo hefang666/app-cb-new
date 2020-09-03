@@ -87,7 +87,9 @@ td,th {
 .snt-gray{
 	color:#aaa;
 }
-
+.snt-black{
+	color:#000;
+}
 /* header 浸入式兼容4*/
 .header-box {
   position: fixed;
@@ -303,7 +305,7 @@ td,th {
 		background-color:#fff;
 		color:#000;
 }
-.snt-nav-normal .aui-icon-left{
+.snt-nav-normal .aui-iconfont{
 		color:#000 !important;
 }
 

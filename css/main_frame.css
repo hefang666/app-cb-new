@@ -1,0 +1,11 @@
+html{background-color: #eee;}
+.snt-nav-normal .aui-iconfont{
+    color: #4F79E8 !important;
+    font-weight: bold;
+}
+.snt-main-big{
+    font-size: 1.1rem
+}
+.snt-main-bold{
+    font-weight: bold;
+}
