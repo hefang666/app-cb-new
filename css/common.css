@@ -90,6 +90,9 @@ td,th {
 .snt-black{
 	color:#000;
 }
+.snt-tomato{
+	color:tomato;
+}
 /* header 浸入式兼容4*/
 .header-box {
   position: fixed;

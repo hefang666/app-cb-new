@@ -1,0 +1,23 @@
+.snt-mine-banner{
+  position: relative;
+}
+.snt-mine-info{
+  position: absolute;
+  top:25%;
+  width: 100%;
+  background: transparent;
+}
+.aui-card-list{
+  background: transparent;
+  font-size: 1.2rem;
+}
+.aui-card-list-user-avatar{
+  width: 3rem;
+}
+.aui-card-list-user-name,.aui-card-list-user-info{
+  color: #fff;
+  font-size: 0.9rem;
+}
+.snt-icon{
+  font-size: 20px;
+}

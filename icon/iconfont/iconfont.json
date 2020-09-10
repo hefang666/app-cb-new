@@ -6,6 +6,27 @@
   "description": "图标",
   "glyphs": [
     {
+      "icon_id": "1016751",
+      "name": "身份证",
+      "font_class": "Id",
+      "unicode": "e6d7",
+      "unicode_decimal": 59095
+    },
+    {
+      "icon_id": "11719488",
+      "name": "身份证",
+      "font_class": "ziyuan",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "13773784",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
       "icon_id": "538489",
       "name": "加",
       "font_class": "jia1",
@@ -125,13 +146,6 @@
       "unicode_decimal": 58883
     },
     {
-      "icon_id": "1631385",
-      "name": "设置",
-      "font_class": "Processsettings",
-      "unicode": "e617",
-      "unicode_decimal": 58903
-    },
-    {
       "icon_id": "1991263",
       "name": "已读信息",
       "font_class": "info-read",
@@ -144,13 +158,6 @@
       "font_class": "xiaoxi",
       "unicode": "e615",
       "unicode_decimal": 58901
-    },
-    {
-      "icon_id": "6129329",
-      "name": "283用户资料、个人信息、个人资料",
-      "font_class": "yonghuziliaogerenxinxigerenziliao",
-      "unicode": "e7ea",
-      "unicode_decimal": 59370
     },
     {
       "icon_id": "8765242",

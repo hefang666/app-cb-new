@@ -8,18 +8,269 @@
     <title>我的</title>
     <link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/mine/mine_frame.css" />
 </head>
 
 <body>
-    <div id="wrap">
-        我的
-    </div>
+    <div class="snt-container">
+        <!-- 头部信息 -->
+        <div class="snt-mine-banner">
+            <img src="../../image/mine_frame/mine_background.png">
+            <div class="snt-mine-info">
+                <div class="aui-card-list">
+                    <div class="aui-card-list-header aui-card-list-user">
+                        <div class="aui-card-list-user-avatar">
+                            <img src="../../image/mine_frame/mine_head.png" class="aui-img-round" />
+                        </div>
+                        <div class="aui-card-list-user-name">
+                            <div id="userName">AUI</div>
+                        </div>
+                        <div id="userAccount" class="aui-card-list-user-info">北京朝阳</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- 主要内容 -->
+        <div class="snt-mine-content">
+            <ul class="aui-list aui-list-in aui-margin-b-15">
+                <li class="aui-list-item aui-border-top aui-border-b" onclick="openMessage()">
+                    <div class="aui-list-item-label-icon">
+                        <i class="iconfont aui-text-warning snt-icon">&#xe603;</i>
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        工作通知
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-border-top" onclick="openAlarm()">
+                    <div class="aui-list-item-label-icon">
+                        <i class="iconfont snt-primary snt-icon">&#xe615;</i>
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        报警消息
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-border-top" onclick="fnToMyInfo()">
+                    <div class="aui-list-item-label-icon">
+                        <i class="iconfont snt-green snt-icon">&#xe6d7;</i>
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        我的资料
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-border-top" onclick="fnToMyApp()">
+                    <div class="aui-list-item-label-icon">
+                        <i class="iconfont aui-text-primary snt-icon">&#xe602;</i>
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        我的应用
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-border-top" onclick="fnToSettings()">
+                    <div class="aui-list-item-label-icon">
+                        <i class="iconfont snt-primary snt-icon">&#xe608;</i>
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        设置
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-border-top" onclick="loginOut()">
+                    <div class="aui-list-item-label-icon">
+                        <i class="iconfont snt-tomato snt-icon">&#xe639;</i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        注销
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
-<script type="text/javascript" src="../../script/city/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="../../script/city/jquery.min.js"></script> -->
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/apiCommon.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/aui/aui-dialog.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
 <script type="text/javascript">
+    var myInfoData = {
+        tenantInfo: {},
+        userInfo: {},
+        contactInfo: {}
+    };
 
+    apiready = function() {
+        onEvent({
+            name: 'changedFontSize',
+            success: function(ret, err) {
+                if (ret) {
+                    changeFontSize();
+                }
+            }
+        })
+
+        api.parseTapmode();
+        fnReady();
+        fnReadyOpenWin();
+        getInfo();
+
+        onEvent({
+                name: 'changedInfo',
+                success: function(ret, err) {
+                    if (ret) {
+                        getInfo();
+                    }
+                }
+            })
+            // 监听是否修改了服务器地址
+        onEvent({
+            name: 'changeApiUrl',
+            success: function(ret, err) {
+                if (ret) {
+                    location.reload();
+                }
+            }
+        })
+    };
+
+    //获取租户和用户信息
+    function getInfo() {
+        fnGet('services/app/Home/GetLoginInfo', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    setUserInfo(ret.result.userInfo, ret.result.tenantInfo);
+                    myInfoData.tenantInfo = ret.result.tenantInfo;
+                    myInfoData.userInfo = ret.result.userInfo;
+                    myInfoData.contactInfo = ret.result.contactInfo;
+                }
+            }
+        })
+    }
+
+    //设置用户名和账户
+    function setUserInfo(data1, data2) {
+        $('#userName').html(data1.trueName);
+        $('#userAccount').html('账号：' + data1.userName);
+        if (data1.avatar) {
+            $(".aui-card-list-user-avatar img").attr('src', apiUrl + data1.avatar);
+        }
+    }
+
+    // 工作通知
+    function openMessage() {
+        openWin('message', '../message/worknotice.html')
+    }
+
+    // 报警消息
+    function openAlarm() {
+        openWin('alarm', '../message/alarm.html', {
+            from: 'mine'
+        })
+    }
+
+    //打开我的资料页面
+    function fnToMyInfo() {
+        openWin('myInfo', './myInfo.html', {
+            myInfoData: myInfoData
+        })
+    }
+
+    //打开我的应用页面
+    function fnToMyApp() {
+        openWin('myApp', './myApp.html')
+    }
+
+    //打开设置页面
+    function fnToSettings() {
+        openWin('settings', './settings.html')
+    }
+
+    //注销操作，清空登录信息，回到登录页面
+    function loginOut() {
+        api.openFrame({
+            name: 'delete_frame',
+            url: '../delete_frame.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                msg: '确定退出当前账号吗？',
+                winName: 'main',
+                frameName: 'mine_frame',
+                jsfun: "loginOutSure()"
+            },
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0.1)',
+        });
+    }
+
+    //确认退出当前账号
+    function loginOutSure() {
+        var bindData = {
+            userId: myInfoData.userInfo.userId,
+            machineCode: ""
+        }
+        fnPost('services/app/User/UpdateMachineCode', {
+            body: JSON.stringify(bindData)
+        }, 'application/json', true, true, function(ret, err) {
+            api.openWin({
+                name: 'login',
+                url: '../login/login.html',
+                // bgColor: '../../image/login/login_backgroud.png',
+                animation: {
+                    type: "reveal", //动画类型（详见动画类型常量）
+                    subType: "from_bottom", //动画子类型（详见动画子类型常量）
+                    duration: 300 //动画过渡时间，默认300毫秒
+                },
+                reload: true,
+                slidBackEnabled: false
+            });
+            // 删除抄表文件 zxf 2020-04-17
+            var fs = api.require('fs');
+            fs.remove({
+                path: 'fs://SntSoft'
+            }, function(ret, err) {
+                if (ret.status) {
+                    // console.log( JSON.stringify( ret ) );
+                }
+            });
+            $api.rmStorage('loginInfo');
+            $api.rmStorage('kfapipath');
+            $api.rmStorage('kfUserId');
+            $api.rmStorage('kfPassWord');
+            $api.rmStorage('kfHeaders');
+            $api.rmStorage('bzapipath');
+            $api.rmStorage('bzUserId');
+            $api.rmStorage('bzPassWord');
+            $api.rmStorage('bzHeaders');
+            $api.rmStorage('cbOperatorId');
+            $api.rmStorage('cbOperatorName');
+            $api.rmStorage('cbPassword');
+            $api.rmStorage('cbOperatorMoblie');
+            //  清除缓存
+            api.clearCache(function() {
+            });
+
+
+            setTimeout(function() {
+                api.closeFrameGroup({
+                    name: 'group'
+                })
+            }, 300);
+        })
+    }
 </script>
 
 </html>
