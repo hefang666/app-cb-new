@@ -225,18 +225,9 @@
         fnPost('services/app/User/UpdateMachineCode', {
             body: JSON.stringify(bindData)
         }, 'application/json', true, true, function(ret, err) {
-            api.openWin({
-                name: 'login',
-                url: '../login/login.html',
-                // bgColor: '../../image/login/login_backgroud.png',
-                animation: {
-                    type: "reveal", //动画类型（详见动画类型常量）
-                    subType: "from_bottom", //动画子类型（详见动画子类型常量）
-                    duration: 300 //动画过渡时间，默认300毫秒
-                },
-                reload: true,
-                slidBackEnabled: false
-            });
+            openWin('login', '../login.html', {
+                slidBackEnabled: false,
+            })
             // 删除抄表文件 zxf 2020-04-17
             var fs = api.require('fs');
             fs.remove({
@@ -259,16 +250,17 @@
             $api.rmStorage('cbOperatorName');
             $api.rmStorage('cbPassword');
             $api.rmStorage('cbOperatorMoblie');
+
             //  清除缓存
             api.clearCache(function() {
             });
 
 
-            setTimeout(function() {
-                api.closeFrameGroup({
-                    name: 'group'
-                })
-            }, 300);
+            // setTimeout(function() {
+            //     api.closeFrameGroup({
+            //         name: 'group'
+            //     })
+            // }, 300);
         })
     }
 </script>

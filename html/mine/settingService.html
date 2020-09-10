@@ -219,7 +219,7 @@
                 data: testData
             }, function(ret, err) {
                 api.hideProgress();
-                checkCallback(that,ret, err)
+                checkCallback(that,addressValue,ret, err)
             });
         }
     }
@@ -279,7 +279,7 @@
     }
 
     // 启用地址回调
-    function checkCallback(that,ret, err){
+    function checkCallback(that,addressValue,ret, err){
         if (ret) {
             if (ret.result && ret.success) {
                 $(that).removeClass('button_active');
