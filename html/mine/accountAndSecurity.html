@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
     <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
-    <title>我的资料</title>
+    <title>账户与安全</title>
     <link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
     <link rel="stylesheet" type="text/css" href="../../css/mine/mine_frame.css" />
@@ -19,12 +19,19 @@
                 <a class="aui-pull-left aui-btn">
                     <span class="aui-iconfont aui-icon-left" onclick="backWin()"></span>
                 </a>
-                <div class="aui-title">我的资料</div>
+                <div class="aui-title">账户与安全</div>
             </header>
         </div>
 
         <!-- 主要内容 -->
         <div class="snt-service-content">
+            <ul class="aui-list aui-margin-b-15">
+                <li class="aui-list-item" onclick="openWin('changePassword', './changePassword.html')">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        修改密码
+                    </div>
+                </li>
+            </ul>
         </div>
 
     </div>

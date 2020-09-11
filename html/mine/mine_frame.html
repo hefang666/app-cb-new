@@ -23,9 +23,9 @@
                             <img src="../../image/mine_frame/mine_head.png" class="aui-img-round" />
                         </div>
                         <div class="aui-card-list-user-name">
-                            <div id="userName">AUI</div>
+                            <div id="userName"></div>
                         </div>
-                        <div id="userAccount" class="aui-card-list-user-info">北京朝阳</div>
+                        <div id="userAccount" class="aui-card-list-user-info"></div>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
 
         <!-- 主要内容 -->
         <div class="snt-mine-content">
-            <ul class="aui-list aui-list-in aui-margin-b-15">
+            <ul class="aui-list aui-margin-b-15">
                 <li class="aui-list-item aui-border-top aui-border-b" onclick="openMessage()">
                     <div class="aui-list-item-label-icon">
                         <i class="iconfont aui-text-warning snt-icon">&#xe603;</i>
@@ -113,7 +113,7 @@
             name: 'changedFontSize',
             success: function(ret, err) {
                 if (ret) {
-                    changeFontSize();
+                    //changeFontSize();
                 }
             }
         })
@@ -124,13 +124,13 @@
         getInfo();
 
         onEvent({
-                name: 'changedInfo',
-                success: function(ret, err) {
-                    if (ret) {
-                        getInfo();
-                    }
+            name: 'changedInfo',
+            success: function(ret, err) {
+                if (ret) {
+                    getInfo();
                 }
-            })
+            }
+        })
             // 监听是否修改了服务器地址
         onEvent({
             name: 'changeApiUrl',
@@ -145,6 +145,7 @@
     //获取租户和用户信息
     function getInfo() {
         fnGet('services/app/Home/GetLoginInfo', {}, false, function(ret, err) {
+            // console.log(JSON.stringify(ret));
             if (ret) {
                 if (ret.success) {
                     setUserInfo(ret.result.userInfo, ret.result.tenantInfo);
@@ -226,7 +227,7 @@
             body: JSON.stringify(bindData)
         }, 'application/json', true, true, function(ret, err) {
             openWin('login', '../login.html', {
-                slidBackEnabled: false,
+                    slidBackEnabled: false,
             })
             // 删除抄表文件 zxf 2020-04-17
             var fs = api.require('fs');
@@ -252,15 +253,14 @@
             $api.rmStorage('cbOperatorMoblie');
 
             //  清除缓存
-            api.clearCache(function() {
-            });
+            api.clearCache(function() {});
 
 
-            // setTimeout(function() {
-            //     api.closeFrameGroup({
-            //         name: 'group'
-            //     })
-            // }, 300);
+            setTimeout(function() {
+                api.closeFrameGroup({
+                    name: 'group'
+                })
+            }, 300);
         })
     }
 </script>

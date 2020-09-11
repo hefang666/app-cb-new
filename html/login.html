@@ -65,11 +65,7 @@
                 cancelAjax();
                 if (!first) {
                     first = new Date().getTime();
-                    api.toast({
-                        msg: '再按一次退出',
-                        duration: 1500,
-                        location: 'bottom'
-                    });
+                    toast('再按一次退出',{duration: 1500});
                     setTimeout(function() {
                         first = null;
                     }, 2000);

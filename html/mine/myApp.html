@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
@@ -13,24 +14,25 @@
 <body>
     <div class="snt-container">
         <!-- 头部信息 -->
-        <div class="snt-mine-banner">
-            <img src="../../image/mine_frame/mine_background.png">
-            <div class="snt-mine-info">
-                <div class="aui-card-list">
-                    <div class="aui-card-list-header aui-card-list-user">
-                        <div class="aui-card-list-user-avatar">
-                            <img src="../../image/mine_frame/mine_head.png" class="aui-img-round" />
-                        </div>
-                        <div class="aui-card-list-user-name">
-                            <div id="userName">AUI</div>
-                        </div>
-                        <div id="userAccount" class="aui-card-list-user-info">北京朝阳</div>
-                    </div>
-                </div>
-            </div>
+        <div class="header-box snt-nav-normal">
+            <header class="aui-bar aui-bar-nav aui-border-b">
+                <a class="aui-pull-left aui-btn">
+                    <span class="aui-iconfont aui-icon-left" onclick="backWin()"></span>
+                </a>
+                <div class="aui-title">我的应用</div>
+            </header>
         </div>
 
         <!-- 主要内容 -->
+        <div class="snt-service-content">
+          <ul class="aui-list aui-margin-b-15">
+              <li class="aui-list-item" onclick="openWin('MeterReading_settings', '../MeterReading/html/MeterReading_settings.html')">
+                  <div class="aui-list-item-inner aui-list-item-arrow">
+                      修改密码
+                  </div>
+              </li>
+          </ul>
+        </div>
 
     </div>
 </body>
@@ -44,8 +46,12 @@
 <script type="text/javascript" src="../../script/aui/aui-dialog.js"></script>
 <script type="text/javascript" src="../../script/diy/template.js"></script>
 <script type="text/javascript">
-
-
+    apiready = function() {
+        var header = $api.dom('header');
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        $('.snt-service-content').css('margin-top', headerH + 'px');
+    }
 </script>
 
 </html>
