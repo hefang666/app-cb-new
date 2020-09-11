@@ -11,15 +11,203 @@
 </head>
 
 <body>
-    <div id="wrap">
-        抄表设置
-    </div>
+    <div class="snt-container">
+        <!-- 头部信息 -->
+        <div class="header-box snt-nav-normal">
+            <header class="aui-bar aui-bar-nav aui-border-b">
+                <a class="aui-pull-left aui-btn">
+                    <span class="aui-iconfont aui-icon-left" onclick="backWin()"></span>
+                </a>
+                <div class="aui-title">抄表设置</div>
+            </header>
+        </div>
 
+        <!-- 主要内容 -->
+        <div class="snt-service-content">
+            <ul class="aui-list aui-margin-b-15">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">保存后自动跳转至下一户</div>
+                        <div class="aui-list-item-right">
+                            <input id="sendNext" type="checkbox" class="aui-switch" onclick="onClickOner(this)">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">抄表完成后数据自动上传</div>
+                        <div class="aui-list-item-right">
+                            <input id="sendUpload" type="checkbox" class="aui-switch" onclick="onClickThree(this)">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">抄表完成后照片自动上传</div>
+                        <div class="aui-list-item-right">
+                            <input id="sendUploadPicture" type="checkbox" class="aui-switch" onclick="sendUploadPicture(this)">
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item" tapmode onclick="openWin('downLoadBasisData', './downLoadBasisData.html')">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        数据更新
+                    </div>
+                </li>
+                <li class="aui-list-item" tapmode onclick="deleteUser()">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        清除抄表数据
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
 </body>
 <script type="text/javascript" src="../../../script/api.js"></script>
-<script type="text/javascript" src="../../../script/city/jquery.min.js"></script>
-<script type="text/javascript">
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/apiCommon.js"></script>
+<script type="text/javascript" src="../../../script/aui/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/cbpublic.js"></script>
+<script type="text/javascript" src="../script/cbremote.js"></script>
 
+<script type="text/javascript">
+    apiready = function() {
+        onEvent({
+            name: 'changedFontSize',
+            success: function(ret, err) {
+                if (ret) {
+                    changeFontSize();
+                }
+            }
+        })
+        api.parseTapmode();
+        fnReady();
+        var header = $api.dom('header');
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        $('.snt-service-content').css('margin-top', headerH + 'px');
+
+        var sendNext = $api.getStorage('sendNext');
+        var sendUpload = $api.getStorage('sendUpload');
+        var sendUploadPicture = $api.getStorage('sendUploadPicture');
+
+        setChecked("sendNext", sendNext);
+        setChecked("sendUpload", sendUpload);
+        setChecked("sendUploadPicture", sendUploadPicture);
+    }
+
+    // 设置状态
+    function setChecked(sendText, sendStatus) {
+        if (sendStatus == "true") {
+            $('#' + sendText + '').attr('checked', true);
+        } else if (sendStatus == null || sendStatus == "") {
+            $('#' + sendText + '').attr('checked', true);
+        }
+    }
+
+    function onClickOner(obj) { //保存后自动跳转至下一户
+        if (obj.checked) {
+            $api.setStorage('sendNext', true)
+        } else {
+            $api.setStorage('sendNext', false);
+        }
+
+    }
+
+    function onClickThree(obj) { //抄表完成后自动上传
+        var db = api.require('db');
+        if (obj.checked) {
+            $api.setStorage('sendUpload', true)
+            var ret = db.executeSqlSync({
+                name: 'CBtest',
+                sql: 'update MRM_DEPLOYS_BEAN set VALUE="1" where CODE="MRM_ONE_UP"'
+            });
+        } else {
+            $api.setStorage('sendUpload', false)
+            var ret = db.executeSqlSync({
+                name: 'CBtest',
+                sql: 'update MRM_DEPLOYS_BEAN set VALUE="0" where CODE="MRM_ONE_UP"'
+            });
+        }
+
+    }
+
+    function deleteUser() {
+        if (dataQuery()) {
+            alert("当前数据中存在未上传的数据,无法更新数据。");
+            return false;
+        }
+        api.confirm({
+            title: '提示',
+            msg: '当前操作会删除抄表数据是否确认删除',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (err) {
+                toast('删除失败，请稍后再试！', {
+                    location: "top"
+                });
+                return false;
+            }
+            var index = ret.buttonIndex;
+            if (index == 1) {
+                var db = api.require('db');
+                var book = db.executeSqlSync({
+                    name: 'CBtest',
+                    sql: 'update MRM_BOOKS_BEAN set CBNUMER="0", YC="0", WC="0", YSC="0", GDSBS="0", XCYH="0", NOTDOWNLOAD="0"'
+                });
+                var user = db.executeSqlSync({
+                    name: 'CBtest',
+                    sql: 'delete from MRM_USER_BEAN'
+                });
+                var photo = db.selectSqlSync({
+                    name: 'CBtest',
+                    sql: 'SELECT * FROM MRM_PHOTOS_BEAN'
+                });
+                if (photo.status) {
+                    if (photo.data.length > 0) {
+                        var LJ = photo.data[0].ZPLJ;
+                        var index = LJ.lastIndexOf('/');
+                        LJ = LJ.substring(0, index);
+                        var fs = api.require('fs');
+                        fs.rmdir({
+                            path: LJ
+                        }, function(ret, err) {
+                            if (ret.status) {
+                                var photos = db.executeSqlSync({
+                                    name: 'CBtest',
+                                    sql: 'delete from MRM_PHOTOS_BEAN'
+                                });
+                                toast('清除成功！', {
+                                    location: "top"
+                                });
+                            } else {
+                                //alert(JSON.stringify(err));
+                            }
+                        });
+                    } else {
+                        toast('清除成功！', {
+                            location: "top"
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+
+    // 抄表完成后照片自动上传
+    function sendUploadPicture(obj) {
+        var db = api.require('db');
+        if (obj.checked) {
+            $api.setStorage('sendUploadPicture', true);
+        } else {
+            $api.setStorage('sendUploadPicture', false);
+        }
+    }
 </script>
 
 </html>

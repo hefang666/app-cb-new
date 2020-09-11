@@ -47,6 +47,17 @@
 <script type="text/javascript" src="../../script/diy/template.js"></script>
 <script type="text/javascript">
     apiready = function() {
+        onEvent({
+            name: 'changedFontSize',
+            success: function(ret, err) {
+                if (ret) {
+                    changeFontSize();
+                }
+            }
+        })
+
+        api.parseTapmode();
+
         var header = $api.dom('header');
         $api.fixStatusBar(header);
         headerH = $api.offset(header).h;

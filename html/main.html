@@ -31,10 +31,137 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/apiCommon.js"></script>
+<script type="text/javascript" src="../script/aui/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/remote.js"></script>
+
 <script type="text/javascript">
+    var first = null;
+    //租户和用户信息数据存放
+    var infoData = {
+        tenantInfo: {},
+        userInfo: {},
+        contactInfo: {}
+    };
+
     apiready = function(){
         //设置tab栏
         funIniGroup();
+
+        onEvent({
+            name: 'keyback',
+            success: function(ret, err) {
+                if (!first) {
+                    first = new Date().getTime();
+                    toast('再按一次退出',{duration: 1500});
+                    setTimeout(function() {
+                        first = null;
+                    }, 2000);
+                } else {
+                    if (new Date().getTime() - first < 2000) {
+                        api.closeWidget({
+                            silent: true
+                        });
+                    }
+                }
+            }
+        })
+
+        ajpush = api.require('ajpush');
+
+        onEvent({
+            name: 'changeMainNum',
+            success: function(ret, err) {
+                setRedDotNum(ret.value.data);
+            }
+        })
+        onEvent({
+            name: 'changeMessageNum',
+            success: function(ret, err) {
+                setRedDotNum1();
+            }
+        })
+
+        ajpush.setListener(
+            function(ret) {
+                var id = ret.id;
+                var title = ret.title;
+                var content = ret.content;
+                var extra = ret.extra;
+                if (api.systemType == 'ios') {
+                    if (extra.Type != 'Message') {
+                        if ($api.getStorage('isnoinited') == '1') {
+                            if ($api.getStorage('resume') == '1') {
+                                $api.setStorage('resume', '0');
+                            } else {
+                                //弹出状态栏通知
+                                api.notification({
+                                    notify: {
+                                        title: title,
+                                        content: content
+                                    }
+                                });
+                            }
+                        } else {
+                            $api.setStorage('resume', '1');
+                        }
+                    }
+                }
+                // setRedDot();
+                // api.sendEvent({
+                //     name: 'changeMessageNum',
+                //     extra: {}
+                // });
+            }
+        );
+
+        // signalrSet();
+        //
+        // api.addEventListener({
+        //     name: 'refreshSignalr'
+        // }, function(ret, err) {
+        //     if (ret) {
+        //         signalrSet();
+        //     }
+        // });
+        //
+        // api.addEventListener({
+        //     name: 'online'
+        // }, function(ret, err) {
+        //     if (ret) {
+        //         signalrSet();
+        //     }
+        // });
+
+        fnGet('services/app/Home/GetHome', {}, false, function(ret, err) {
+            if (ret && ret.success) {
+                //alert(JSON.stringify(ret.result.templateTitles[0].applications));
+                //console.log(JSON.stringify(ret.result.templateTitles));
+                if (ret.result.templateTitles[0].applications.length > 0) {
+                    var UserId = "";
+                    var UserName = "";
+                    var PassWord = "";
+                    var cbapipath = "";
+                    for (var i = 0; i < ret.result.templateTitles[0].applications.length; i++) {
+                        if (ret.result.templateTitles[0].applications[i].coding == "WaterStarOne-MRH-S8") {
+                            UserId = ret.result.templateTitles[0].applications[i].thirdPartyUserId;
+                            UserName = ret.result.templateTitles[0].applications[i].thirdPartyUserName;
+                            PassWord = ret.result.templateTitles[0].applications[i].thirdPartyPassWord;
+                            cbapipath = ret.result.templateTitles[0].applications[i].appServerApi;
+                            $api.setStorage('cbapipath', cbapipath); //抄表管家的服务器地址
+                            $api.setStorage('yptOperatorId', UserId);
+                            $api.setStorage('yptOperatorName', UserName);
+                            $api.setStorage('yptPassword', PassWord);
+                            break;
+                        }
+                    }
+                }
+            } else {
+
+            }
+        });
     }
 
     function funIniGroup() {
@@ -104,5 +231,222 @@
         }, 100);
 
     }
+
+    // 获取 拍照尺寸
+    function getPicSize(){
+      var headers = {};
+      headers["Content-Type"] = 'application/json';
+      headers["accept"] = 'text/plain';
+      headers.Authorization = $api.getStorage('loginInfo');
+      // var url = 'http://' + $api.getStorage('apiUrl') +"/api/services/app/Parameter/GetParameterByCode?Code=cameraScale";
+      var url = "http://192.168.10.33:8010/" +"/api/services/app/Parameter/GetParameterByCode?Code=cameraScale";
+      api.ajax({
+          url: url,
+          method: 'get',
+          // timeout: 15,
+          dataType: 'json',
+          headers: headers,
+          // traditional: true
+      }, function(ret, err) {
+        if(err){
+          $api.setStorage('cameraScale', 500);
+        }
+        if(ret){
+          $api.setStorage('cameraScale', ret.result);
+        }
+      });
+    }
+
+    function signalrSet() {
+        try {
+            //及时消息发送
+            var hubUrl = apiUrl + "/signalr";
+            var token = $api.getStorage('loginInfo');
+            var index = token.indexOf(' ');
+            token = token.substring(index + 1);
+            var connection = new signalR.HubConnectionBuilder().withUrl(hubUrl, {
+                accessTokenFactory: function() {
+                    return token
+                }
+            }).configureLogging(signalR.LogLevel.Information).build();
+
+            connection.on("position", function(data) {
+                api.sendEvent({
+                    name: 'sendLocationNow',
+                    extra: {}
+                });
+            });
+
+            connection.on("jiGuangPushUpdateRecords", function(data) {
+                api.sendEvent({
+                    name: 'changeMessageNum',
+                    extra: {}
+                });
+            });
+
+            connection.start()
+                .catch(function(err) {
+                    return "";
+                });
+        } catch (e) {
+            console.log('signalR出错');
+            console.log(e);
+        }
+    }
+
+    //设置消息的红点显示
+    function setRedDot() {
+        fnPost('services/app/AppUser/UnreadCountAsync', {
+            body: JSON.stringify({})
+        }, 'application/json', true, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    $('#message').find('.aui-dot').remove();
+                    var alarmNum = ret.result.alarm;
+                    var messageNum = ret.result.website;
+                    var workNum = ret.result.work;
+                    var num = alarmNum + messageNum + workNum;
+                    var jpushNum = messageNum + workNum;
+                    if (api.systemType == 'ios') {
+                        ajpush.setBadge({
+                            badge: jpushNum
+                        });
+                    } else {
+                        api.setAppIconBadge({
+                            badge: jpushNum
+                        });
+                    }
+                    if (num != 0) {
+                        var redDot;
+                        if (num > 99) {
+                            redDot = '<div class="aui-dot" style="padding:0 0.1rem">99+</div>';
+                        } else {
+                            redDot = '<div class="aui-dot">' + num + '</div>';
+                        }
+                        $('#message').append(redDot);
+                    } else {
+                        $('#message').find('.aui-dot').remove();
+                    }
+                    if (num != 0) {
+                        var redDot;
+                        if (num > 99) {
+                            // redDot = '<div class="aui-dot aui-dot-Max">99+</div>';
+                            setTabBarNum('99+');
+                        } else {
+                            // redDot = '<div class="aui-dot">' + num + '</div>';
+                            setTabBarNum(num);
+                        }
+                        // $('#message').append(redDot);
+
+                    } else {
+                        // $('#message').find('.aui-dot').remove();
+                        setTabBarNum(0);
+                    }
+                }
+            }
+        })
+    }
+
+    //监听设置消息的红点显示
+    var number;
+    var jpushNumber;
+
+    function setRedDotNum(data) {
+        $('#message').find('.aui-dot').remove();
+        var alarmNum = data.alarm;
+        var messageNum = data.website;
+        var workNum = data.work;
+        var num = alarmNum + messageNum + workNum;
+        var jpushNum = messageNum + workNum;
+        if (api.systemType == 'ios') {
+            ajpush.setBadge({
+                badge: jpushNum
+            });
+        } else {
+            api.setAppIconBadge({
+                badge: jpushNum
+            });
+        }
+        number = num;
+        jpushNumber = jpushNum;
+        if (num != 0) {
+            var redDot;
+            if (num > 99) {
+                redDot = '<div class="aui-dot aui-dot-Max">99+</div>';
+                // setTabBarNum('99+');
+            } else {
+                redDot = '<div class="aui-dot">' + num + '</div>';
+                // setTabBarNum(num);
+            }
+            $('#message').append(redDot);
+
+        } else {
+            $('#message').find('.aui-dot').remove();
+            // setTabBarNum(0);
+        }
+
+    }
+
+    function setTabBarNum(num) {
+        api.setTabBarItemAttr({
+            index: 1,
+            badge: {
+                text: num,
+                radius: 9,
+                y: 1
+            }
+        });
+    }
+
+    function setRedDotNum1() {
+        number--;
+        jpushNumber--;
+        if (number < 0) {
+            number = 0
+        }
+        if (jpushNumber < 0) {
+            jpushNumber = 0
+        }
+        $('#message').find('.aui-dot').remove();
+        if (api.systemType == 'ios') {
+            ajpush.setBadge({
+                badge: jpushNumber
+            });
+        } else {
+            api.setAppIconBadge({
+                badge: jpushNumber
+            });
+        }
+        if (number != 0) {
+            var redDot;
+            if (number > 99) {
+                redDot = '<div class="aui-dot aui-dot-Max">99+</div>';
+            } else {
+                redDot = '<div class="aui-dot">' + number + '</div>';
+            }
+            $('#message').append(redDot);
+        } else {
+            $('#message').find('.aui-dot').remove();
+        }
+        // if (number != 0) {
+        //     var redDot;
+        //     if (number > 99) {
+        //         // redDot = '<div class="aui-dot aui-dot-Max">99+</div>';
+        //         setTabBarNum('99+');
+        //     } else {
+        //         // redDot = '<div class="aui-dot">' + num + '</div>';
+        //         setTabBarNum(number);
+        //     }
+        //     // $('#message').append(redDot);
+        //
+        // } else {
+        //     // $('#message').find('.aui-dot').remove();
+        //     setTabBarNum(0);
+        // }
+
+    }
+
+
+
 </script>
 </html>
