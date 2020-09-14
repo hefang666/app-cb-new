@@ -8,7 +8,7 @@
     <title>我的应用</title>
     <link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
-    <link rel="stylesheet" type="text/css" href="../../css/mine/mine_frame.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/mine/myApp.css" />
 </head>
 
 <body>
@@ -25,13 +25,36 @@
 
         <!-- 主要内容 -->
         <div class="snt-service-content">
-          <ul class="aui-list aui-margin-b-15">
-              <li class="aui-list-item" onclick="openWin('MeterReading_settings', '../MeterReading/html/MeterReading_settings.html')">
-                  <div class="aui-list-item-inner aui-list-item-arrow">
-                      修改密码
-                  </div>
-              </li>
-          </ul>
+            <ul class="aui-list aui-margin-b-15">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-image"></i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        左侧有图标列表
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-image"></i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        左侧有图标列表
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-image"></i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        左侧有图标列表
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="snt-app-footer">
+            共3个应用
         </div>
 
     </div>
@@ -47,10 +70,56 @@
 <script type="text/javascript" src="../../script/diy/template.js"></script>
 <script type="text/javascript">
     apiready = function() {
+        onEvent({
+            name: 'changedFontSize',
+            success: function(ret, err) {
+                if (ret) {
+                    changeFontSize();
+                }
+            }
+        })
+        api.parseTapmode();
+        fnReady();
+
         var header = $api.dom('header');
         $api.fixStatusBar(header);
         headerH = $api.offset(header).h;
         $('.snt-service-content').css('margin-top', headerH + 'px');
+
+        getMyAppList();
+
+    }
+
+    //获取我的应用
+    function getMyAppList() {
+        fnGet('services/app/Home/GetMyApplications', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    $('.aui-list').html('');
+                    var html = '';
+                    var num = 0;
+                    if (ret.result.applications != null) {
+                        var data = ret.result.applications;
+                        var num = ret.result.applications.length;
+                        for (var i = 0; i < data.length; i++) {
+                            var url = apiUrl + data[i].productIcon;
+                            var appLi =
+                                '<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-media"><img src="' + url +
+                                '" class="aui-list-img-sm"></div><div class="aui-list-item-inner">' +
+                                data[i].productName + '</div></div></li>';
+                            html += appLi;
+                        }
+                        $('.aui-list').append(html);
+                        setDefaultImg();
+                    }
+                    api.execScript({
+                        name: 'myApp',
+                        script: 'changeNumber(' + num + ');'
+                    });
+
+                }
+            }
+        })
     }
 </script>
 
