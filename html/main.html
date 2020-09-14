@@ -1,16 +1,16 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>主页面tab页面</title>
     <link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
-    <style>
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/main.css" />
 </head>
+
 <body>
     <div>
         <footer class="aui-bar aui-bar-tab snt-bar-fiexd" id="footer">
@@ -19,7 +19,7 @@
                 <div class="aui-bar-tab-label">首页</div>
             </div>
             <div class="aui-bar-tab-item" onclick="randomSwitchBtn(this);" tapmode>
-                <i class="aui-iconfont aui-icon-comment"></i>
+                <i class="aui-iconfont aui-icon-comment"></i><span id="message"></span>
                 <div class="aui-bar-tab-label">消息</div>
             </div>
             <div class="aui-bar-tab-item" onclick="randomSwitchBtn( this );" tapmode>
@@ -46,7 +46,7 @@
         contactInfo: {}
     };
 
-    apiready = function(){
+    apiready = function() {
         //设置tab栏
         funIniGroup();
 
@@ -55,7 +55,9 @@
             success: function(ret, err) {
                 if (!first) {
                     first = new Date().getTime();
-                    toast('再按一次退出',{duration: 1500});
+                    toast('再按一次退出', {
+                        duration: 1500
+                    });
                     setTimeout(function() {
                         first = null;
                     }, 2000);
@@ -162,6 +164,9 @@
 
             }
         });
+
+        var redDot = '<div class="aui-dot">' + 3 + '</div>';
+        $('#message').append(redDot);
     }
 
     function funIniGroup() {
@@ -233,28 +238,28 @@
     }
 
     // 获取 拍照尺寸
-    function getPicSize(){
-      var headers = {};
-      headers["Content-Type"] = 'application/json';
-      headers["accept"] = 'text/plain';
-      headers.Authorization = $api.getStorage('loginInfo');
-      // var url = 'http://' + $api.getStorage('apiUrl') +"/api/services/app/Parameter/GetParameterByCode?Code=cameraScale";
-      var url = "http://192.168.10.33:8010/" +"/api/services/app/Parameter/GetParameterByCode?Code=cameraScale";
-      api.ajax({
-          url: url,
-          method: 'get',
-          // timeout: 15,
-          dataType: 'json',
-          headers: headers,
-          // traditional: true
-      }, function(ret, err) {
-        if(err){
-          $api.setStorage('cameraScale', 500);
-        }
-        if(ret){
-          $api.setStorage('cameraScale', ret.result);
-        }
-      });
+    function getPicSize() {
+        var headers = {};
+        headers["Content-Type"] = 'application/json';
+        headers["accept"] = 'text/plain';
+        headers.Authorization = $api.getStorage('loginInfo');
+        // var url = 'http://' + $api.getStorage('apiUrl') +"/api/services/app/Parameter/GetParameterByCode?Code=cameraScale";
+        var url = "http://192.168.10.33:8010/" + "/api/services/app/Parameter/GetParameterByCode?Code=cameraScale";
+        api.ajax({
+            url: url,
+            method: 'get',
+            // timeout: 15,
+            dataType: 'json',
+            headers: headers,
+            // traditional: true
+        }, function(ret, err) {
+            if (err) {
+                $api.setStorage('cameraScale', 500);
+            }
+            if (ret) {
+                $api.setStorage('cameraScale', ret.result);
+            }
+        });
     }
 
     function signalrSet() {
@@ -271,17 +276,11 @@
             }).configureLogging(signalR.LogLevel.Information).build();
 
             connection.on("position", function(data) {
-                api.sendEvent({
-                    name: 'sendLocationNow',
-                    extra: {}
-                });
+                sendEvent('sendLocationNow');
             });
 
             connection.on("jiGuangPushUpdateRecords", function(data) {
-                api.sendEvent({
-                    name: 'changeMessageNum',
-                    extra: {}
-                });
+                sendEvent('changeMessageNum');
             });
 
             connection.start()
@@ -445,8 +444,6 @@
         // }
 
     }
-
-
-
 </script>
+
 </html>
